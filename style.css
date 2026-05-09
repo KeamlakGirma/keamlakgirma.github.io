@@ -233,3 +233,35 @@ display:none;
 }
 
 }
+/* ADD THIS to style.css */
+
+.featured-project{
+position:relative;
+overflow:hidden;
+}
+
+.featured-project::before{
+content:"FEATURED";
+position:absolute;
+top:18px;
+right:-35px;
+background:white;
+color:#111;
+padding:6px 40px;
+font-size:.7rem;
+font-weight:700;
+transform:rotate(45deg);
+}
+
+.project-link{
+display:inline-block;
+margin-top:15px;
+text-decoration:none;
+color:#8fb0ff;
+font-weight:600;
+transition:.3s;
+}
+
+.project-link:hover{
+transform:translateX(5px);
+}
