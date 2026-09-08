@@ -207,6 +207,18 @@ transform:translateY(-8px);
 padding:28px;
 }
 
+.contact-link{
+display:inline-block;
+text-decoration:none;
+color:#8fb0ff;
+font-weight:600;
+transition:.3s;
+}
+
+.contact-link:hover{
+transform:translateX(5px);
+}
+
 footer{
 padding:40px 0;
 text-align:center;
