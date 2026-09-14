@@ -239,7 +239,7 @@
       <a href="#walkthrough">Walkthrough</a>
       <a href="#architecture">Architecture</a>
       <a href="#stack">Stack</a>
-      <a href="#notes">Notes</a>
+      <!-- <a href="#notes">Notes</a> -->
     </nav>
   </div>
 </div>
@@ -391,7 +391,7 @@
           <div class="step-num">STEP 01</div>
           <h4>Sign up with real validation, then pick a mode</h4>
           <p>The multi‑step sign‑up form checks for a valid email and an 8‑character password client‑side before it ever hits the API, and a shared login context keeps the rider signed in across screens. From home, a single search bar sets the origin, then it's a choice of taxi, bus, or train.</p>
-          <span class="tag">AppForm.js · LoginForm.js · LoginProvider.js</span>
+          <!-- <span class="tag">AppForm.js · LoginForm.js · LoginProvider.js</span> -->
         </div>
       </div>
 
@@ -417,7 +417,7 @@
           <div class="step-num">STEP 02</div>
           <h4>The route draws itself between real stations</h4>
           <p>Bus and train screens use a searchable dropdown seeded with actual Addis Ababa stops, and the map component calls the Google Directions and Distance Matrix APIs to draw the route and estimate travel time — with a fallback alert if no route exists.</p>
-          <span class="tag">BusScreen.js · Map.js</span>
+          <!-- <span class="tag">BusScreen.js · Map.js</span> -->
         </div>
       </div>
 
@@ -439,7 +439,7 @@
           <div class="step-num">STEP 03</div>
           <h4>Checkout in providers riders already use</h4>
           <p>Instead of a card form, checkout is a dropdown of Ethiopian mobile‑money rails — TeleBirr, CBE Birr, YenePay — because that's how fares actually get paid on the ground.</p>
-          <span class="tag">Payment.js</span>
+          <!-- <span class="tag">Payment.js</span> -->
         </div>
       </div>
 
@@ -448,7 +448,7 @@
           <div class="step-num">STEP 04</div>
           <h4>A ticket record, not just a picture</h4>
           <p>Each booking gets a unique QR code, and the ticket's route, price, and timestamp are saved to the API as an actual record — the same record a driver's scan will need to validate later.</p>
-          <span class="tag">Ticketing.js · models/ticket.js</span>
+          <!-- <span class="tag">Ticketing.js · models/ticket.js</span> -->
         </div>
         <div class="step-visual phone">
           <img src="ClientQRCode.jpg" height="100%" width="100%" style="border-radius: 15px;">
@@ -467,7 +467,7 @@
           <div class="step-num">STEP 05</div>
           <h4>One home screen, three jobs</h4>
           <p>A driver's day is scanning tickets, following the assigned route, and knowing their working hours — so the driver home screen is exactly those three shortcuts, nothing else.</p>
-          <span class="tag">Home.js (Driver)</span>
+          <!-- <span class="tag">Home.js (Driver)</span> -->
         </div>
       </div>
 
@@ -514,7 +514,7 @@
           <div class="step-num">STEP 07</div>
           <h4>A direct line, not a support ticket</h4>
           <p>When a driver hits traffic or an incident, one button opens the phone's dialer straight to the agent hotline — deliberately low‑tech for a moment when a driver needs a person, fast.</p>
-          <span class="tag">Callagent.js</span>
+          <!-- <span class="tag">Callagent.js</span> -->
         </div>
       </div>
     </div>
@@ -524,56 +524,25 @@
 
       <div class="step">
         <div class="step-visual browser">
-          <div class="chrome"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="addr"></div></div>
-          <div class="frame">
-            <div class="dash-side">
-              <div class="brand-mini"></div>
-              <div class="item active">Users</div>
-              <div class="item">Drivers</div>
-              <div class="item">Comments</div>
-            </div>
-            <div class="dash-main">
-              <div class="dash-h">List of Users</div>
-              <table class="dash-table">
-                <tr><th>Full name</th><th>Email</th></tr>
-                <tr><td>Bethlehem T.</td><td>bethlehem@•••.com</td></tr>
-                <tr><td>Yohannes A.</td><td>yohannes@•••.com</td></tr>
-                <tr><td>Selam G.</td><td>selam@•••.com</td></tr>
-              </table>
-            </div>
-          </div>
+          <img src="AdminView.png" height="100%" width="100%" style="border-radius: 15px;">
+        </div>
         </div>
         <div class="step-copy">
           <div class="step-num">STEP 08</div>
           <h4>Admin sees who's on the platform</h4>
           <p>A sidebar‑and‑table dashboard lists every registered rider and driver, with edit and delete actions on the driver roster for the admin to manage accounts directly.</p>
-          <span class="tag">UserList.jsx · DriverList.jsx</span>
+          <!-- <span class="tag">UserList.jsx · DriverList.jsx</span> -->
         </div>
       </div>
 
       <div class="step reverse">
-        <div class="step-visual browser">
-          <div class="chrome"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="addr"></div></div>
-          <div class="frame">
-            <div class="dash-side">
-              <div class="brand-mini"></div>
-              <div class="item">Routes</div>
-              <div class="item active">Map</div>
-              <div class="item">Reports</div>
-            </div>
-            <div class="dash-main" style="padding:0;">
-              <div class="dash-map">
-                <div class="map-pin green" style="left:30%;top:60%;"></div>
-                <div class="map-pin gold" style="left:70%;top:25%;"></div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <img src="AgentView" height="100%" width="100%" style="border-radius: 15px;">
+      </div>
         <div class="step-copy">
           <div class="step-num">STEP 09</div>
           <h4>Agents manage routes on a live map</h4>
           <p>The agent console drops a Mapbox map centered on Addis Ababa so an agent can see and manage the routes drivers are assigned to, and moderate comments coming in from both riders and drivers.</p>
-          <span class="tag">MapboxMap.jsx · CommentList.jsx</span>
+          <!-- <span class="tag">MapboxMap.jsx · CommentList.jsx</span> -->
         </div>
       </div>
     </div>
@@ -688,7 +657,7 @@
 
 <hr class="rule">
 
-<section id="notes">
+<!-- <section id="notes">
   <div class="wrap">
     <div class="section-head">
       <div class="kicker">Engineering notes</div>
@@ -713,9 +682,9 @@
       </div>
     </div>
   </div>
-</section>
+</section> -->
 
-<hr class="rule">
+<!-- <hr class="rule">
 
 <section style="padding-top:64px;">
   <div class="wrap">
@@ -735,7 +704,7 @@
   tokens: [...oldTokens, { token, signedAt: Date.now().toString() }],
 });</code>
   </div>
-</section>
+</section> -->
 
 <footer>
   <div class="wrap">
