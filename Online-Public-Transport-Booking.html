@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Online Public Transport Booking | Case Study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400..700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#12152A;
+    --panel:#1A1F3D;
+    --panel-2:#212752;
+    --line:rgba(243,238,226,0.10);
+    --line-strong:rgba(243,238,226,0.22);
+    --gold:#E8A94A;
+    --gold-dim:#B9843A;
+    --teal:#3FA18B;
+    --blue:#5C6BC0;
+    --cream:#F3EEE2;
+    --dim:#9BA1C8;
+    --dim-2:#6E749C;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--bg);color:var(--cream);font-family:'IBM Plex Sans', sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased;}
+  h1,h2,h3{font-family:'Space Grotesk', sans-serif;margin:0;font-weight:700;letter-spacing:-0.01em;}
+  .mono{font-family:'IBM Plex Mono', monospace;}
+  a{color:var(--gold);text-decoration:none;}
+  .wrap{max-width:1160px;margin:0 auto;padding:0 32px;}
+  @media (max-width:720px){.wrap{padding:0 20px;}}
+
+  .topbar{position:sticky;top:0;z-index:50;background:rgba(18,21,42,0.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
+  .topbar .wrap{display:flex;align-items:center;justify-content:space-between;height:60px;}
+  .brand{font-family:'Space Grotesk';font-weight:700;font-size:16px;color:var(--cream);}
+  .brand span{color:var(--gold);}
+  .topnav{display:flex;gap:26px;font-size:14px;color:var(--dim);}
+  .topnav a{color:var(--dim);}
+  .topnav a:hover{color:var(--cream);}
+  @media (max-width:680px){.topnav{display:none;}}
+
+  .hero{padding:92px 0 60px;position:relative;overflow:hidden;}
+  .hero::before{content:"";position:absolute;top:-200px;right:-160px;width:520px;height:520px;background:radial-gradient(circle, rgba(232,169,74,0.16), transparent 65%);pointer-events:none;}
+  .hero::after{content:"";position:absolute;bottom:-260px;left:-200px;width:520px;height:520px;background:radial-gradient(circle, rgba(63,161,139,0.14), transparent 65%);pointer-events:none;}
+  .eyebrow-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px;}
+  .pill{font-size:12.5px;color:var(--dim);border:1px solid var(--line-strong);border-radius:100px;padding:5px 12px;}
+  .hero-grid{display:grid;grid-template-columns:1.15fr 0.85fr;gap:56px;align-items:start;position:relative;z-index:1;}
+  @media (max-width:860px){.hero-grid{grid-template-columns:1fr;}}
+  .hero h1{font-size:42px;line-height:1.1;max-width:580px;}
+  @media (max-width:520px){.hero h1{font-size:30px;}}
+  .hero p.lede{font-size:17px;color:var(--dim);max-width:520px;margin-top:20px;}
+  .hero-meta{display:flex;gap:32px;margin-top:34px;flex-wrap:wrap;}
+  .hero-meta div{font-size:13px;color:var(--dim-2);}
+  .hero-meta strong{display:block;color:var(--cream);font-family:'Space Grotesk';font-size:15px;font-weight:600;margin-bottom:2px;}
+
+  /* phone mockup */
+  .phone{width:246px;height:500px;border-radius:34px;background:#0D0F20;border:1px solid rgba(255,255,255,0.14);padding:9px;box-shadow:0 30px 60px -20px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04) inset;flex-shrink:0;margin:0 auto;}
+  .phone .screen{width:100%;height:100%;background:#F6F3EA;border-radius:26px;overflow:hidden;position:relative;color:#1B1D2E;font-family:'IBM Plex Sans', sans-serif;}
+  .phone .notch{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:70px;height:16px;background:#0D0F20;border-radius:10px;z-index:5;}
+  .screen .status{font-size:10px;color:#8A8676;display:flex;justify-content:space-between;padding:12px 16px 0;}
+  .sc-pad{padding:14px 16px;}
+  .sc-title{font-family:'Space Grotesk';font-weight:600;font-size:15px;margin:10px 0 14px;}
+  .sc-field{background:#fff;border:1px solid #DAD5C4;border-radius:8px;padding:10px 12px;font-size:11.5px;color:#8A8676;margin-bottom:9px;}
+  .sc-btn{border-radius:100px;padding:9px 0;text-align:center;font-size:12px;font-weight:600;margin-bottom:8px;}
+  .sc-btn.solid{background:#C9C2AC;color:#1B1D2E;}
+  .sc-btn.dark{background:#3A3A34;color:#F3EEE2;}
+  .sc-btn.gold{background:var(--gold);color:#1B1D2E;}
+  .err-note{font-size:10px;color:#C4573F;margin:-4px 0 10px;}
+
+  /* browser / dashboard mockup */
+  .browser{background:#0D0F20;border:1px solid rgba(255,255,255,0.14);border-radius:14px;padding:8px 8px 0;box-shadow:0 30px 60px -20px rgba(0,0,0,0.55);}
+  .browser .chrome{display:flex;align-items:center;gap:6px;padding:6px 8px 10px;}
+  .browser .dot{width:8px;height:8px;border-radius:50%;background:#3A3E5C;}
+  .browser .addr{flex:1;height:20px;background:#1B2044;border-radius:6px;margin-left:8px;}
+  .browser .frame{background:#F6F3EA;border-radius:8px 8px 0 0;overflow:hidden;display:flex;min-height:280px;color:#1B1D2E;font-family:'IBM Plex Sans', sans-serif;}
+  .dash-side{width:96px;background:#1B1D2E;color:#EDEAE0;padding:14px 10px;flex-shrink:0;}
+  .dash-side .brand-mini{width:44px;height:10px;background:#3A3E5C;border-radius:3px;margin-bottom:16px;}
+  .dash-side .item{font-size:9.5px;color:#9B98AE;padding:6px 0;}
+  .dash-side .item.active{color:#F3EEE2;font-weight:600;}
+  .dash-main{flex:1;padding:14px 16px;}
+  .dash-h{font-family:'Space Grotesk';font-size:13px;font-weight:600;margin-bottom:10px;}
+  .dash-table{width:100%;border-collapse:collapse;font-size:10px;}
+  .dash-table th{text-align:left;color:#8A8676;font-weight:600;padding:5px 6px;border-bottom:1px solid #E2DCC9;font-size:9px;text-transform:uppercase;letter-spacing:.04em;}
+  .dash-table td{padding:6px 6px;border-bottom:1px solid #EFEAD9;}
+  .badge{display:inline-block;font-size:8.5px;padding:2px 6px;border-radius:100px;background:#EDE8D9;color:#5C5846;}
+  .dash-map{height:100%;background:repeating-linear-gradient(0deg,#E7E2D2 0 1px,transparent 1px 26px),repeating-linear-gradient(90deg,#E7E2D2 0 1px,transparent 1px 26px),#EFEAD9;position:relative;}
+
+  section{padding:76px 0;}
+  .section-head{max-width:640px;margin-bottom:44px;}
+  .kicker{font-size:13px;color:var(--gold);font-weight:600;margin-bottom:10px;}
+  .section-head h2{font-size:29px;}
+  .section-head p{color:var(--dim);margin-top:14px;font-size:15.5px;}
+  hr.rule{border:none;border-top:1px solid var(--line);margin:0;}
+
+  .context-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;}
+  @media (max-width:760px){.context-grid{grid-template-columns:1fr;}}
+  .context-grid p{font-size:15.5px;color:var(--dim);}
+  .context-grid p strong{color:var(--cream);}
+  .stat-row{display:flex;gap:28px;margin-top:28px;flex-wrap:wrap;}
+  .stat{border-left:2px solid var(--gold);padding-left:14px;}
+  .stat b{display:block;font-family:'Space Grotesk';font-size:22px;}
+  .stat span{font-size:12.5px;color:var(--dim-2);}
+
+  /* role grid */
+  .role-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+  @media (max-width:900px){.role-grid{grid-template-columns:repeat(2,1fr);}}
+  @media (max-width:520px){.role-grid{grid-template-columns:1fr;}}
+  .role-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px;}
+  .role-swatch{width:30px;height:30px;border-radius:8px;margin-bottom:14px;}
+  .role-card h4{font-family:'Space Grotesk';font-size:16px;margin-bottom:4px;}
+  .role-card .role-app{font-size:11.5px;color:var(--dim-2);margin-bottom:12px;}
+  .role-card ul{margin:0;padding-left:0;list-style:none;}
+  .role-card li{font-size:12.5px;color:var(--dim);padding:4px 0;padding-left:14px;position:relative;}
+  .role-card li::before{content:"–";position:absolute;left:0;color:var(--dim-2);}
+
+  /* walkthrough sub-blocks */
+  .flow-label{display:flex;align-items:baseline;gap:12px;margin:0 0 32px;}
+  .flow-label h3{font-size:20px;}
+  .flow-label span{font-size:12.5px;color:var(--dim-2);font-family:'IBM Plex Mono';}
+  .step{display:grid;grid-template-columns:0.9fr 1.1fr;gap:56px;align-items:center;padding:48px 0;}
+  .step:not(:last-child){border-bottom:1px solid var(--line);}
+  .step.reverse{grid-template-columns:1.1fr 0.9fr;}
+  .step.reverse .step-visual{order:2;}
+  .step.reverse .step-copy{order:1;}
+  @media (max-width:820px){
+    .step, .step.reverse{grid-template-columns:1fr;gap:28px;}
+    .step.reverse .step-visual, .step.reverse .step-copy{order:initial;}
+  }
+  .step-num{font-family:'Space Grotesk';font-size:13px;color:var(--gold-dim);letter-spacing:0.06em;margin-bottom:10px;}
+  .step-copy h4{font-size:22px;margin-bottom:12px;font-family:'Space Grotesk';font-weight:700;}
+  .step-copy p{color:var(--dim);font-size:15px;}
+  .step-copy .tag{display:inline-block;margin-top:16px;font-size:12px;color:var(--teal);border:1px solid rgba(63,161,139,0.4);border-radius:6px;padding:4px 9px;font-family:'IBM Plex Mono';}
+  .flow-block{margin-bottom:8px;}
+  .flow-block:not(:last-child){padding-bottom:8px;border-bottom:1px solid var(--line);margin-bottom:56px;}
+
+  /* mini screen widgets reused across mockups */
+  .home-sidebar{background:#1B1D2E;color:#F3EEE2;height:100%;width:100%;padding:16px 14px;position:relative;}
+  .home-tab{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;font-size:11.5px;margin-bottom:4px;color:#B7B4C9;}
+  .home-dot{width:16px;height:16px;border-radius:4px;background:#38395C;flex-shrink:0;}
+  .home-sheet{position:absolute;left:0;right:0;bottom:0;top:118px;background:#F6F3EA;border-radius:20px 20px 0 0;padding:14px 14px 0;}
+  .opt-card{display:flex;align-items:center;gap:10px;background:#EDE8D9;border-radius:10px;padding:9px 10px;margin-bottom:8px;}
+  .opt-ico{width:30px;height:30px;border-radius:8px;flex-shrink:0;}
+  .opt-ico.taxi{background:#E8A94A;}
+  .opt-ico.bus{background:#3FA18B;}
+  .opt-ico.train{background:#5C6BC0;}
+  .opt-ico.qr{background:#5C6BC0;}
+  .opt-ico.route{background:#3FA18B;}
+  .opt-ico.sched{background:#E8A94A;}
+  .opt-card b{font-size:11.5px;}
+
+  .dd{background:#fff;border:1px solid #DAD5C4;border-radius:10px;padding:11px 12px;margin-bottom:10px;}
+  .dd small{display:block;font-size:9.5px;color:#8A8676;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px;}
+  .dd .val{font-size:12px;font-weight:600;}
+
+  .map-area{height:220px;background:linear-gradient(0deg, rgba(63,161,139,0.10), transparent),repeating-linear-gradient(0deg, #E7E2D2 0 1px, transparent 1px 34px),repeating-linear-gradient(90deg, #E7E2D2 0 1px, transparent 1px 34px),#EFEAD9;position:relative;overflow:hidden;}
+  .map-pin{width:12px;height:12px;border-radius:50%;position:absolute;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,0.3);}
+  .map-pin.green{background:#3FA18B;}
+  .map-pin.gold{background:#E8A94A;}
+  .map-route{position:absolute;stroke:#1B1D2E;stroke-width:2.5;stroke-dasharray:1 6;fill:none;stroke-linecap:round;}
+  .map-card{background:#F6F3EA;padding:12px 14px;}
+  .map-card .eta{font-size:11px;color:#8A8676;}
+  .map-card .eta b{color:#1B1D2E;}
+
+  .pay-row{display:flex;justify-content:space-between;align-items:center;background:#fff;border:1px solid #DAD5C4;border-radius:10px;padding:11px 12px;margin-bottom:8px;}
+  .pay-row.selected{border-color:var(--gold);background:#FBF1DF;}
+  .pay-row b{font-size:11.5px;}
+  .pay-row span{font-size:9.5px;color:#8A8676;font-family:'IBM Plex Mono';}
+  .pay-check{width:14px;height:14px;border-radius:50%;border:2px solid #DAD5C4;flex-shrink:0;}
+  .pay-check.on{background:var(--gold);border-color:var(--gold);}
+
+  .ticket-card{background:#fff;border-radius:14px;margin-top:6px;padding:16px;box-shadow:0 10px 24px -12px rgba(0,0,0,0.25);text-align:center;}
+  .qr{width:110px;height:110px;margin:8px auto 12px;background:repeating-linear-gradient(0deg,#1B1D2E 0 6px, transparent 6px 12px),repeating-linear-gradient(90deg,#1B1D2E 0 6px, transparent 6px 12px);background-blend-mode:multiply;background-color:#fff;border-radius:6px;}
+  .ticket-route{font-size:11px;color:#5C5846;}
+  .ticket-route b{color:#1B1D2E;}
+  .ticket-dash{border-top:1px dashed #DAD5C4;margin:10px 0;}
+  .ticket-id{font-family:'IBM Plex Mono';font-size:9.5px;color:#8A8676;}
+
+  .scan-box{background:#101223;border-radius:12px;height:170px;position:relative;margin:8px 0 12px;overflow:hidden;}
+  .scan-corner{position:absolute;width:22px;height:22px;border:3px solid var(--gold);}
+  .scan-corner.tl{top:14px;left:14px;border-right:none;border-bottom:none;}
+  .scan-corner.tr{top:14px;right:14px;border-left:none;border-bottom:none;}
+  .scan-corner.bl{bottom:14px;left:14px;border-right:none;border-top:none;}
+  .scan-corner.br{bottom:14px;right:14px;border-left:none;border-top:none;}
+  .scan-line{position:absolute;left:14px;right:14px;top:50%;height:2px;background:rgba(232,169,74,0.7);}
+  .call-card{background:#fff;border-radius:12px;padding:20px 16px;text-align:center;margin-top:10px;}
+  .call-num{font-family:'IBM Plex Mono';font-size:13px;color:#5C5846;margin:6px 0 14px;}
+
+  /* architecture */
+  .arch{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:36px 30px;}
+  .arch-clients{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:0;}
+  @media (max-width:760px){.arch-clients{grid-template-columns:repeat(2,1fr);}}
+  .arch-client{background:var(--panel-2);border:1px solid var(--line-strong);border-radius:10px;padding:12px 12px;text-align:center;font-size:12px;color:var(--cream);}
+  .arch-client span{display:block;font-size:10.5px;color:var(--dim-2);margin-top:3px;}
+  .arch-down{display:flex;justify-content:center;color:var(--gold);font-size:20px;padding:10px 0;}
+  .arch-row{display:flex;align-items:stretch;gap:0;flex-wrap:wrap;}
+  .arch-box{background:var(--panel-2);border:1px solid var(--line-strong);border-radius:12px;padding:18px 18px;flex:1;min-width:190px;}
+  .arch-box h4{font-family:'Space Grotesk';font-size:14.5px;margin-bottom:8px;color:var(--cream);}
+  .arch-box ul{margin:0;padding-left:0;list-style:none;}
+  .arch-box li{font-size:12.5px;color:var(--dim);padding:3px 0;}
+  .arch-arrow{display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:20px;padding:0 14px;flex:0 0 auto;}
+  @media (max-width:820px){.arch-row{flex-direction:column;}.arch-arrow{transform:rotate(90deg);padding:6px 0;}}
+  .arch-side{margin-top:18px;display:flex;gap:14px;flex-wrap:wrap;}
+  .arch-side .arch-box{flex:0 1 240px;}
+  .arch-note{font-size:12px;color:var(--dim-2);margin-top:18px;}
+
+  .stack-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden;}
+  @media (max-width:900px){.stack-grid{grid-template-columns:repeat(2,1fr);}}
+  .stack-col{background:var(--panel);padding:24px 20px;}
+  .stack-col h4{font-size:12.5px;color:var(--gold);margin-bottom:14px;font-family:'Space Grotesk';}
+  .stack-col ul{margin:0;padding:0;list-style:none;}
+  .stack-col li{font-size:13px;color:var(--dim);padding:5px 0;border-top:1px solid var(--line);}
+  .stack-col li:first-child{border-top:none;}
+
+  .notes{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+  @media (max-width:820px){.notes{grid-template-columns:1fr;}}
+  .note-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px;}
+  .note-card .num{font-family:'IBM Plex Mono';font-size:12px;color:var(--gold-dim);}
+  .note-card h4{font-size:15px;margin:10px 0 8px;font-family:'Space Grotesk';}
+  .note-card p{font-size:13.5px;color:var(--dim);margin:0;}
+
+  code.snip{display:block;background:#0D0F20;border:1px solid var(--line);border-radius:10px;padding:16px 18px;font-family:'IBM Plex Mono';font-size:12px;color:#B7C9C0;overflow-x:auto;white-space:pre;line-height:1.6;}
+  code.snip .k{color:#E8A94A;}
+  code.snip .s{color:#8FBFA8;}
+  code.snip .c{color:#6E749C;}
+
+  footer{padding:52px 0 72px;border-top:1px solid var(--line);}
+  footer .wrap{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;}
+  footer p{color:var(--dim-2);font-size:13px;margin:0;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <div class="brand">Public Transport Booking <span>/ case study</span></div>
+    <nav class="topnav">
+      <a href="#context">Context</a>
+      <a href="#roles">Roles</a>
+      <a href="#walkthrough">Walkthrough</a>
+      <a href="#architecture">Architecture</a>
+      <a href="#stack">Stack</a>
+      <a href="#notes">Notes</a>
+    </nav>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow-row">
+        <span class="pill">React Native · Expo</span>
+        <span class="pill">React · React Router</span>
+        <span class="pill">Node.js / Express / MongoDB</span>
+        <span class="pill">4 apps, 1 backend</span>
+      </div>
+      <h1>A ticket booked by a rider is a ticket a driver can scan.</h1>
+      <p class="lede">A full MERN system for public transport: riders book a taxi, bus, or train and get a QR ticket; drivers scan that ticket, follow their route, and call for help; admins and agents run the operation from a web console.</p>
+      <div class="hero-meta">
+        <div><strong>Role</strong>Full‑stack — 2 mobile apps + 2 web apps + API</div>
+        <div><strong>Stack</strong>React Native, React, Express, MongoDB</div>
+        <div><strong>Focus</strong>Modeling a real transit operator, not just a booking form</div>
+      </div>
+    </div>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="screen">
+        <div class="status"><span>9:41</span><span>●●●</span></div>
+        <div class="sc-pad">
+          <div class="sc-title" style="font-size:17px;margin-top:24px;">Sign in</div>
+          <div class="sc-field">Email</div>
+          <div class="sc-field">Password · 8+ characters</div>
+          <div class="sc-btn gold">Sign in</div>
+          <div class="sc-btn dark">Create account</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<hr class="rule">
+
+<section id="context">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker">Why four apps</div>
+      <h2>Booking a ride is only one side of running a transit system.</h2>
+    </div>
+    <div class="context-grid">
+      <p>A rider app that generates tickets is only useful if someone downstream can act on that ticket. <strong>This project treats booking as one step in a longer chain</strong> — a ticket has to reach a driver, a route has to reach an agent's map, and a rider's complaint has to reach someone who can read it.</p>
+      <p>So instead of one client and a database, this is <strong>two React Native apps (rider, driver) and two React web apps (admin, agent)</strong> sitting on top of one Express + MongoDB API — with real JWT sessions, password hashing, and Cloudinary‑hosted profile photos, not placeholder auth.</p>
+    </div>
+    <div class="stat-row">
+      <div class="stat"><b>4</b><span>client apps sharing one backend</span></div>
+      <div class="stat"><b>2</b><span>mobile roles — rider &amp; driver</span></div>
+      <div class="stat"><b>2</b><span>web roles — admin &amp; agent</span></div>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section id="roles">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker">Who uses what</div>
+      <h2>Four roles, four very different screens</h2>
+      <p>Same backend, same MongoDB collections — but each role only sees what its job needs.</p>
+    </div>
+    <div class="role-grid">
+      <div class="role-card">
+        <div class="role-swatch" style="background:#E8A94A;"></div>
+        <h4>Rider</h4>
+        <div class="role-app">React Native app</div>
+        <ul>
+          <li>Sign up &amp; sign in</li>
+          <li>Set current location and destination</li>
+          <li>Choose taxi, bus, or train and see the price</li>
+          <li>Pay, then receive a QR ticket</li>
+          <li>Leave comments about the service</li>
+        </ul>
+      </div>
+      <div class="role-card">
+        <div class="role-swatch" style="background:#3FA18B;"></div>
+        <h4>Driver</h4>
+        <div class="role-app">React Native app</div>
+        <ul>
+          <li>Sign up &amp; sign in</li>
+          <li>Receive travel schedules and view the route</li>
+          <li>Scan a rider's QR ticket to validate it</li>
+          <li>Call an agent during traffic or an incident</li>
+          <li>Leave comments about the service</li>
+        </ul>
+      </div>
+      <div class="role-card">
+        <div class="role-swatch" style="background:#5C6BC0;"></div>
+        <h4>Admin</h4>
+        <div class="role-app">React web app</div>
+        <ul>
+          <li>Sign up &amp; sign in</li>
+          <li>View the list of registered riders</li>
+          <li>View, edit, and remove drivers</li>
+        </ul>
+      </div>
+      <div class="role-card">
+        <div class="role-swatch" style="background:#C4573F;"></div>
+        <h4>Agent</h4>
+        <div class="role-app">React web app</div>
+        <ul>
+          <li>Sign up &amp; sign in</li>
+          <li>Manage routes on a live map to support drivers</li>
+          <li>Review comments from riders and drivers</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section id="walkthrough">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker">Walkthrough</div>
+      <h2>Following one ticket through the system</h2>
+      <p>Screens recreated from the apps' actual components — starting with the rider booking a trip, then handing off to the driver and the ops team.</p>
+    </div>
+
+    <div class="flow-block">
+      <div class="flow-label"><h3>Rider app</h3><span>book → pay → ticket</span></div>
+
+      <div class="step">
+        <div class="step-visual phone">
+          <div class="notch"></div>
+          <div class="screen">
+            <div class="status"><span>9:41</span><span>●●●</span></div>
+            <div class="home-sidebar">
+              <div style="height:36px;width:60px;background:#2A2C46;border-radius:6px;margin-bottom:18px;"></div>
+              <div class="home-tab"><div class="home-dot"></div>Profile</div>
+              <div class="home-tab"><div class="home-dot"></div>Comments</div>
+              <div class="home-tab" style="margin-top:18px;"><div class="home-dot"></div>Sign out</div>
+              <div class="home-sheet">
+                <div class="sc-field" style="margin-top:0;">Where From?</div>
+                <div class="opt-card"><div class="opt-ico taxi"></div><b>Get a Taxi</b></div>
+                <div class="opt-card"><div class="opt-ico bus"></div><b>Get a Bus</b></div>
+                <div class="opt-card"><div class="opt-ico train"></div><b>Get a Train</b></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="step-copy">
+          <div class="step-num">STEP 01</div>
+          <h4>Sign up with real validation, then pick a mode</h4>
+          <p>The multi‑step sign‑up form checks for a valid email and an 8‑character password client‑side before it ever hits the API, and a shared login context keeps the rider signed in across screens. From home, a single search bar sets the origin, then it's a choice of taxi, bus, or train.</p>
+          <span class="tag">AppForm.js · LoginForm.js · LoginProvider.js</span>
+        </div>
+      </div>
+
+      <div class="step reverse">
+        <div class="step-visual phone">
+          <div class="notch"></div>
+          <div class="screen">
+            <div class="status"><span>9:41</span><span>●●●</span></div>
+            <div class="map-area">
+              <svg class="map-route" viewBox="0 0 246 220" width="100%" height="100%">
+                <path d="M 44 162 C 88 116, 118 92, 196 56" />
+              </svg>
+              <div class="map-pin green" style="left:38px;top:156px;"></div>
+              <div class="map-pin gold" style="left:190px;top:50px;"></div>
+            </div>
+            <div class="map-card">
+              <div class="sc-title" style="margin:0 0 4px;font-size:13px;">Megenagna → Summit</div>
+              <div class="eta">Estimated travel time <b>10 mins</b></div>
+            </div>
+          </div>
+        </div>
+        <div class="step-copy">
+          <div class="step-num">STEP 02</div>
+          <h4>The route draws itself between real stations</h4>
+          <p>Bus and train screens use a searchable dropdown seeded with actual Addis Ababa stops, and the map component calls the Google Directions and Distance Matrix APIs to draw the route and estimate travel time — with a fallback alert if no route exists.</p>
+          <span class="tag">BusScreen.js · Map.js</span>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-visual phone">
+          <div class="notch"></div>
+          <div class="screen">
+            <div class="status"><span>9:41</span><span>●●●</span></div>
+            <div class="sc-pad">
+              <div class="sc-title" style="font-size:17px;">Payment Information</div>
+              <div class="pay-row selected"><div><b>TeleBirr</b><br><span>251•••••223</span></div><div class="pay-check on"></div></div>
+              <div class="pay-row"><div><b>CBE Birr</b><br><span>1000•••••312</span></div><div class="pay-check"></div></div>
+              <div class="pay-row"><div><b>YenePay</b><br><span>137•••••312</span></div><div class="pay-check"></div></div>
+              <div class="sc-btn gold" style="margin-top:6px;">Confirm payment</div>
+            </div>
+          </div>
+        </div>
+        <div class="step-copy">
+          <div class="step-num">STEP 03</div>
+          <h4>Checkout in providers riders already use</h4>
+          <p>Instead of a card form, checkout is a dropdown of Ethiopian mobile‑money rails — TeleBirr, CBE Birr, YenePay — because that's how fares actually get paid on the ground.</p>
+          <span class="tag">Payment.js</span>
+        </div>
+      </div>
+
+      <div class="step reverse">
+        <div class="step-visual phone">
+          <div class="notch"></div>
+          <div class="screen">
+            <div class="status"><span>9:41</span><span>●●●</span></div>
+            <div class="sc-pad">
+              <div class="sc-title" style="font-size:17px;">Your Ticket</div>
+              <div class="ticket-card">
+                <div class="qr"></div>
+                <div class="ticket-route"><b>Megenagna</b> → <b>Summit</b></div>
+                <div class="ticket-dash"></div>
+                <div class="ticket-id">TICKET · a41c‑09f…</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="step-copy">
+          <div class="step-num">STEP 04</div>
+          <h4>A ticket record, not just a picture</h4>
+          <p>Each booking gets a unique QR code, and the ticket's route, price, and timestamp are saved to the API as an actual record — the same record a driver's scan will need to validate later.</p>
+          <span class="tag">Ticketing.js · models/ticket.js</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="flow-block">
+      <div class="flow-label"><h3>Driver app</h3><span>schedule → scan → escalate</span></div>
+
+      <div class="step">
+        <div class="step-visual phone">
+          <div class="notch"></div>
+          <div class="screen">
+            <div class="status"><span>9:41</span><span>●●●</span></div>
+            <div class="sc-pad">
+              <div class="sc-title" style="font-size:17px;">Home</div>
+              <div class="opt-card"><div class="opt-ico qr"></div><b>Scan QR code</b></div>
+              <div class="opt-card"><div class="opt-ico route"></div><b>View route</b></div>
+              <div class="opt-card"><div class="opt-ico sched"></div><b>View schedule</b></div>
+            </div>
+          </div>
+        </div>
+        <div class="step-copy">
+          <div class="step-num">STEP 05</div>
+          <h4>One home screen, three jobs</h4>
+          <p>A driver's day is scanning tickets, following the assigned route, and knowing their working hours — so the driver home screen is exactly those three shortcuts, nothing else.</p>
+          <span class="tag">Home.js (Driver)</span>
+        </div>
+      </div>
+
+      <div class="step reverse">
+        <div class="step-visual phone">
+          <div class="notch"></div>
+          <div class="screen">
+            <div class="status"><span>9:41</span><span>●●●</span></div>
+            <div class="sc-pad">
+              <div class="sc-title" style="font-size:17px;">Scan QR code</div>
+              <div class="scan-box">
+                <div class="scan-corner tl"></div><div class="scan-corner tr"></div>
+                <div class="scan-corner bl"></div><div class="scan-corner br"></div>
+                <div class="scan-line"></div>
+              </div>
+              <div class="sc-btn dark">Scan again?</div>
+            </div>
+          </div>
+        </div>
+        <div class="step-copy">
+          <div class="step-num">STEP 06</div>
+          <h4>The rider's QR code becomes the boarding check</h4>
+          <p>The driver app opens the camera through Expo's barcode scanner, reads the ticket's payload, and surfaces it on screen — closing the loop the rider opened when they paid.</p>
+          <span class="tag">Camera.js · expo-barcode-scanner</span>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-visual phone">
+          <div class="notch"></div>
+          <div class="screen">
+            <div class="status"><span>9:41</span><span>●●●</span></div>
+            <div class="sc-pad">
+              <div class="sc-title" style="font-size:17px;">Call agent for help</div>
+              <div class="call-card">
+                <b style="font-size:13px;">Traffic or incident?</b>
+                <div class="call-num">tel: 4848</div>
+                <div class="sc-btn dark">Call Agent</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="step-copy">
+          <div class="step-num">STEP 07</div>
+          <h4>A direct line, not a support ticket</h4>
+          <p>When a driver hits traffic or an incident, one button opens the phone's dialer straight to the agent hotline — deliberately low‑tech for a moment when a driver needs a person, fast.</p>
+          <span class="tag">Callagent.js</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="flow-block" style="margin-bottom:0;border-bottom:none;padding-bottom:0;">
+      <div class="flow-label"><h3>Admin &amp; agent console</h3><span>manage → route → moderate</span></div>
+
+      <div class="step">
+        <div class="step-visual browser">
+          <div class="chrome"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="addr"></div></div>
+          <div class="frame">
+            <div class="dash-side">
+              <div class="brand-mini"></div>
+              <div class="item active">Users</div>
+              <div class="item">Drivers</div>
+              <div class="item">Comments</div>
+            </div>
+            <div class="dash-main">
+              <div class="dash-h">List of Users</div>
+              <table class="dash-table">
+                <tr><th>Full name</th><th>Email</th></tr>
+                <tr><td>Bethlehem T.</td><td>bethlehem@•••.com</td></tr>
+                <tr><td>Yohannes A.</td><td>yohannes@•••.com</td></tr>
+                <tr><td>Selam G.</td><td>selam@•••.com</td></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="step-copy">
+          <div class="step-num">STEP 08</div>
+          <h4>Admin sees who's on the platform</h4>
+          <p>A sidebar‑and‑table dashboard lists every registered rider and driver, with edit and delete actions on the driver roster for the admin to manage accounts directly.</p>
+          <span class="tag">UserList.jsx · DriverList.jsx</span>
+        </div>
+      </div>
+
+      <div class="step reverse">
+        <div class="step-visual browser">
+          <div class="chrome"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="addr"></div></div>
+          <div class="frame">
+            <div class="dash-side">
+              <div class="brand-mini"></div>
+              <div class="item">Routes</div>
+              <div class="item active">Map</div>
+              <div class="item">Reports</div>
+            </div>
+            <div class="dash-main" style="padding:0;">
+              <div class="dash-map">
+                <div class="map-pin green" style="left:30%;top:60%;"></div>
+                <div class="map-pin gold" style="left:70%;top:25%;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="step-copy">
+          <div class="step-num">STEP 09</div>
+          <h4>Agents manage routes on a live map</h4>
+          <p>The agent console drops a Mapbox map centered on Addis Ababa so an agent can see and manage the routes drivers are assigned to, and moderate comments coming in from both riders and drivers.</p>
+          <span class="tag">MapboxMap.jsx · CommentList.jsx</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="rule">
+
+<section id="architecture">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker">Under the hood</div>
+      <h2>Four clients, one API, one database</h2>
+      <p>Every app talks to the same Express server; role is just which routes and screens a given client uses.</p>
+    </div>
+    <div class="arch">
+      <div class="arch-clients">
+        <div class="arch-client">Rider app<span>React Native</span></div>
+        <div class="arch-client">Driver app<span>React Native</span></div>
+        <div class="arch-client">Admin web<span>React</span></div>
+        <div class="arch-client">Agent web<span>React</span></div>
+      </div>
+      <div class="arch-down">↓</div>
+      <div class="arch-row">
+        <div class="arch-box">
+          <h4>API server</h4>
+          <ul>
+            <li>Node.js + Express</li>
+            <li>Role‑scoped routers — user / driver / admin / agent</li>
+            <li>bcrypt password hashing on save</li>
+            <li>JWT sessions with rotating token list + sign‑out</li>
+          </ul>
+        </div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-box">
+          <h4>Data &amp; media</h4>
+          <ul>
+            <li>MongoDB — user, driver, ticket, comment collections</li>
+            <li>Mongoose schemas per role</li>
+            <li>Cloudinary — profile photo storage</li>
+          </ul>
+        </div>
+      </div>
+      <div class="arch-side">
+        <div class="arch-box">
+          <h4>Google Maps Platform</h4>
+          <ul>
+            <li>Places Autocomplete — origin search</li>
+            <li>Directions &amp; Distance Matrix — route + ETA</li>
+          </ul>
+        </div>
+        <div class="arch-box">
+          <h4>Mapbox</h4>
+          <ul>
+            <li>Powers the agent's route‑management map</li>
+          </ul>
+        </div>
+      </div>
+      <p class="arch-note">Riders and drivers hit Google's APIs directly for anything map‑related; the agent console uses Mapbox for its own route view. All four clients go through the same Express API for accounts, tickets, and comments.</p>
+    </div>
+  </div>
+</section>
+
+<section id="stack">
+  <div class="wrap">
+    <div class="section-head" style="margin-bottom:28px;">
+      <div class="kicker">Tech stack</div>
+      <h2>What's actually in package.json</h2>
+    </div>
+    <div class="stack-grid">
+      <div class="stack-col">
+        <h4>Rider &amp; driver apps</h4>
+        <ul>
+          <li>React Native + Expo</li>
+          <li>React Navigation (stack + drawer)</li>
+          <li>Redux Toolkit / React‑Redux</li>
+          <li>expo-barcode-scanner</li>
+          <li>react-native-maps + Directions</li>
+        </ul>
+      </div>
+      <div class="stack-col">
+        <h4>Admin &amp; agent web</h4>
+        <ul>
+          <li>React + React Router</li>
+          <li>mapbox-gl</li>
+          <li>Axios</li>
+          <li>Sass modules</li>
+        </ul>
+      </div>
+      <div class="stack-col">
+        <h4>API server</h4>
+        <ul>
+          <li>Express + CORS</li>
+          <li>Mongoose / MongoDB</li>
+          <li>Multer — image uploads</li>
+          <li>Joi — request validation</li>
+        </ul>
+      </div>
+      <div class="stack-col">
+        <h4>Auth &amp; media</h4>
+        <ul>
+          <li>bcrypt / bcryptjs</li>
+          <li>jsonwebtoken</li>
+          <li>Cloudinary SDK</li>
+          <li>sharp — image processing</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section id="notes">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker">Engineering notes</div>
+      <h2>What's solid, and what's next</h2>
+      <p>Written the way I'd walk a reviewer through the repo — including the parts that are still rough.</p>
+    </div>
+    <div class="notes">
+      <div class="note-card">
+        <div class="num">01</div>
+        <h4>Rider &amp; driver auth is production‑shaped</h4>
+        <p>Passwords hash on save via a Mongoose pre‑save hook, sign‑in issues a JWT and appends it to a rotating token list (pruned after 24h), and sign‑out removes just that token — a real session model, not a stub.</p>
+      </div>
+      <div class="note-card">
+        <div class="num">02</div>
+        <h4>The admin/agent API needs a live database</h4>
+        <p>The rider/driver side connects to MongoDB Atlas, but the admin/agent entry point still has a placeholder connection string — that half of the API isn't hooked up to a live database in this snapshot.</p>
+      </div>
+      <div class="note-card">
+        <div class="num">03</div>
+        <h4>Keys and env names need to line up</h4>
+        <p>A Mapbox token and a Google Maps key are inline in the client source rather than read from environment variables, and the admin model expects <span class="mono" style="font-size:12px;">JWTPRIVATEKEY</span> while the server's <span class="mono" style="font-size:12px;">.env</span> defines <span class="mono" style="font-size:12px;">JWT_SECRET</span> — rotating the keys and reconciling the variable names is the first hardening pass.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section style="padding-top:64px;">
+  <div class="wrap">
+    <div class="section-head" style="margin-bottom:28px;">
+      <div class="kicker">A closer look</div>
+      <h2>Session handling, simplified</h2>
+    </div>
+    <code class="snip"><span class="c">// controllers/user.js — issue a token and prune expired ones on sign-in</span>
+<span class="k">const</span> token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: <span class="s">'1d'</span> });
+
+<span class="k">let</span> oldTokens = user.tokens.filter(t => {
+  <span class="k">const</span> ageInSeconds = (Date.now() - <span class="k">parseInt</span>(t.signedAt)) / <span class="s">1000</span>;
+  <span class="k">return</span> ageInSeconds < <span class="s">86400</span>; <span class="c">// keep only tokens under 24h old</span>
+});
+
+<span class="k">await</span> User.findByIdAndUpdate(user._id, {
+  tokens: [...oldTokens, { token, signedAt: Date.now().toString() }],
+});</code>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>Built with React Native, React, Express &amp; MongoDB — a class project modeling a full transit operator: riders, drivers, admins, and agents on one backend.</p>
+    <p>Case study assembled from the project source.</p>
+  </div>
+</footer>
+
+</body>
+</html>
